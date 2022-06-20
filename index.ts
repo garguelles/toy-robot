@@ -1,5 +1,6 @@
+import { place } from "./src/commands";
 import { createMatrix } from "./src/matrix";
-import { DirectionEnum, State } from "./src/types";
+import { State, Command, CommandEnum } from "./src/types";
 
 const initialState: State = {
   matrixSize: { xSize: 5, ySize: 5 },
@@ -7,17 +8,17 @@ const initialState: State = {
   facing: null,
 };
 
-const state = initialState;
+let state = initialState;
+const matrix = createMatrix(state.matrixSize);
 
-const matrixOld = [
-  [0, 1, 2, 3, 4],
-  [0, 1, 2, 3, 4],
-  [0, 1, 2, 3, 4],
-  [0, 1, 2, 3, 4],
-  [0, 1, 2, 3, 4],
-];
-
-
-console.log("direction", DirectionEnum, matrixOld, createMatrix(state.matrixSize));
+const executeCommand = (command: Command<any>) => {
+  switch (command.action) {
+    case CommandEnum.PLACE:
+      place(command.payload.coordinates, command.payload.facing);
+      break;
+    default:
+      throw new Error("Invalid command");
+  }
+};
 
 
