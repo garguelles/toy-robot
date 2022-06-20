@@ -11,7 +11,6 @@ const initialState = {
     facing: null,
 };
 let state = initialState;
-const matrix = (0, matrix_1.createMatrix)(state.matrixSize);
 const executeCommand = (command) => {
     switch (command.action) {
         case types_1.CommandEnum.PLACE:
@@ -19,8 +18,14 @@ const executeCommand = (command) => {
             state = { ...state, ...placeResult };
             break;
         case types_1.CommandEnum.MOVE:
-            const moveResult = (0, commands_1.move)(state, command.payload.location, command.payload.facing, command.payload.direction);
+            const moveResult = (0, commands_1.move)(state, command.payload.location, command.payload.facing);
             state = { ...state, ...moveResult };
+            break;
+        case types_1.CommandEnum.LEFT:
+            state = { ...state, facing: (0, commands_1.turn)(state, types_1.TurnEnum.LEFT) };
+            break;
+        case types_1.CommandEnum.RIGHT:
+            state = { ...state, facing: (0, commands_1.turn)(state, types_1.TurnEnum.RIGHT) };
             break;
         default:
             throw new Error("Invalid command");
@@ -56,63 +61,41 @@ const toyRobot = (0, bandersnatch_1.program)()
         }
     });
 }))
+    .add((0, bandersnatch_1.command)(types_1.CommandEnum.LEFT)
+    .action(async () => {
+    if (!state.location || !state.facing) {
+        throw new exceptions_1.RobotNotPlacedError();
+    }
+    executeCommand({
+        action: types_1.CommandEnum.LEFT,
+        payload: {
+            location: state.location,
+            facing: state.facing,
+        }
+    });
+}))
+    .add((0, bandersnatch_1.command)(types_1.CommandEnum.RIGHT)
+    .action(async () => {
+    if (!state.location || !state.facing) {
+        throw new exceptions_1.RobotNotPlacedError();
+    }
+    executeCommand({
+        action: types_1.CommandEnum.RIGHT,
+        payload: {
+            location: state.location,
+            facing: state.facing,
+        }
+    });
+}))
     .add((0, bandersnatch_1.command)(types_1.CommandEnum.REPORT)
     .action(async () => {
-    console.log("REPORT -- ", state);
-}))
-    .add((0, bandersnatch_1.command)(types_1.DirectionEnum.NORTH)
-    .action(async () => {
     if (!state.location || !state.facing) {
         throw new exceptions_1.RobotNotPlacedError();
     }
-    executeCommand({
-        action: types_1.CommandEnum.MOVE,
-        payload: {
-            location: state.location,
-            facing: state.facing,
-            direction: types_1.DirectionEnum.NORTH,
-        }
-    });
-}))
-    .add((0, bandersnatch_1.command)(types_1.DirectionEnum.SOUTH)
-    .action(async () => {
-    if (!state.location || !state.facing) {
-        throw new exceptions_1.RobotNotPlacedError();
-    }
-    executeCommand({
-        action: types_1.CommandEnum.MOVE,
-        payload: {
-            location: state.location,
-            facing: state.facing,
-            direction: types_1.DirectionEnum.SOUTH,
-        }
-    });
-}))
-    .add((0, bandersnatch_1.command)(types_1.DirectionEnum.EAST)
-    .action(async () => {
-    if (!state.location || !state.facing) {
-        throw new exceptions_1.RobotNotPlacedError();
-    }
-    executeCommand({
-        action: types_1.CommandEnum.MOVE,
-        payload: {
-            location: state.location,
-            facing: state.facing,
-            direction: types_1.DirectionEnum.EAST,
-        }
-    });
-})).add((0, bandersnatch_1.command)(types_1.DirectionEnum.WEST)
-    .action(async () => {
-    if (!state.location || !state.facing) {
-        throw new exceptions_1.RobotNotPlacedError();
-    }
-    executeCommand({
-        action: types_1.CommandEnum.MOVE,
-        payload: {
-            location: state.location,
-            facing: state.facing,
-            direction: types_1.DirectionEnum.WEST,
-        }
-    });
+    const { location, facing } = state;
+    const matrix = (0, matrix_1.createMatrix)(state.matrixSize);
+    matrix[(state.matrixSize.ySize - 1) - location.y][location.x] = "o";
+    console.log(`OUTPUT: ${location.x}, ${location.y}, ${facing}`);
+    console.log(matrix);
 }));
 toyRobot.repl().catch(error => console.error("[Failed]", error.message));

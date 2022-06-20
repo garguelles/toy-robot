@@ -1,8 +1,8 @@
 import { program, command } from "bandersnatch";
-import { place, move } from "./src/commands";
+import { place, move, turn } from "./src/commands";
 import { RobotNotPlacedError } from "./src/exceptions";
 import { createMatrix } from "./src/matrix";
-import { State, Command, CommandEnum, DirectionEnum } from "./src/types";
+import { State, Command, CommandEnum, DirectionEnum, TurnEnum } from "./src/types";
 
 const initialState: State = {
   matrixSize: { xSize: 5, ySize: 5 },
@@ -11,7 +11,6 @@ const initialState: State = {
 };
 
 let state = initialState;
-const matrix = createMatrix(state.matrixSize);
 
 const executeCommand = (command: Command) => {
   switch (command.action) {
@@ -24,9 +23,14 @@ const executeCommand = (command: Command) => {
         state,
         command.payload.location,
         command.payload.facing,
-        command.payload.direction,
       );
       state = { ...state, ...moveResult };
+      break;
+    case CommandEnum.LEFT:
+      state = { ...state, facing: turn(state, TurnEnum.LEFT) };
+      break;
+    case CommandEnum.RIGHT:
+      state = { ...state, facing: turn(state, TurnEnum.RIGHT) };
       break;
     default:
       throw new Error("Invalid command");
@@ -69,6 +73,37 @@ const toyRobot = program()
       })
   )
   .add(
+    command(CommandEnum.LEFT)
+      .action(async () => {
+        if (!state.location || !state.facing) {
+          throw new RobotNotPlacedError();
+        }
+        executeCommand({
+          action: CommandEnum.LEFT,
+          payload: {
+            location: state.location,
+            facing: state.facing,
+          }
+        })
+      })
+  )
+  .add(
+    command(CommandEnum.RIGHT)
+      .action(async () => {
+        if (!state.location || !state.facing) {
+          throw new RobotNotPlacedError();
+        }
+        executeCommand({
+          action: CommandEnum.RIGHT,
+          payload: {
+            location: state.location,
+            facing: state.facing,
+          }
+        })
+      })
+
+  )
+  .add(
     command(CommandEnum.REPORT)
       .action(async () => {
         if (!state.location || !state.facing) {
@@ -76,76 +111,10 @@ const toyRobot = program()
         }
 
         const { location, facing } = state;
+        const matrix = createMatrix(state.matrixSize);
+        matrix[(state.matrixSize.ySize - 1) - location.y][location.x] = "o";
         console.log(`OUTPUT: ${location.x}, ${location.y}, ${facing}`)
         console.log(matrix);
-      })
-  )
-  .add(
-    command(DirectionEnum.NORTH)
-      .action(async () => {
-        if (!state.location || !state.facing) {
-          throw new RobotNotPlacedError();
-        }
-
-        executeCommand({
-          action: CommandEnum.MOVE,
-          payload: {
-            location: state.location,
-            facing: state.facing,
-            direction: DirectionEnum.NORTH,
-          }
-        });
-      })
-  )
-  .add(
-    command(DirectionEnum.SOUTH)
-      .action(async () => {
-        if (!state.location || !state.facing) {
-          throw new RobotNotPlacedError();
-        }
-
-        executeCommand({
-          action: CommandEnum.MOVE,
-          payload: {
-            location: state.location,
-            facing: state.facing,
-            direction: DirectionEnum.SOUTH,
-          }
-        });
-      })
-  )
-  .add(
-    command(DirectionEnum.EAST)
-      .action(async () => {
-        if (!state.location || !state.facing) {
-          throw new RobotNotPlacedError();
-        }
-
-        executeCommand({
-          action: CommandEnum.MOVE,
-          payload: {
-            location: state.location,
-            facing: state.facing,
-            direction: DirectionEnum.EAST,
-          }
-        });
-      })
-  ).add(
-    command(DirectionEnum.WEST)
-      .action(async () => {
-        if (!state.location || !state.facing) {
-          throw new RobotNotPlacedError();
-        }
-
-        executeCommand({
-          action: CommandEnum.MOVE,
-          payload: {
-            location: state.location,
-            facing: state.facing,
-            direction: DirectionEnum.WEST,
-          }
-        });
-
       })
   );
 

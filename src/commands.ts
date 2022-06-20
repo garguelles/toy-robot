@@ -1,4 +1,4 @@
-import { Coordinates, DirectionEnum, Nullable, State, MatrixSize, CommandResult } from "./types";
+import { Coordinates, DirectionEnum, Nullable, State, MatrixSize, CommandResult, TurnEnum } from "./types";
 import { InvalidLocationError, RobotNotPlacedError } from "./exceptions";
 
 const moveInDirection = {
@@ -15,6 +15,26 @@ const moveInDirection = {
     x: coordinates.x - 1, y: coordinates.y,
   }),
 };
+
+const turnDirection = {
+  [DirectionEnum.NORTH]: {
+    [TurnEnum.LEFT]: DirectionEnum.WEST,
+    [TurnEnum.RIGHT]: DirectionEnum.EAST,
+  },
+  [DirectionEnum.SOUTH]: {
+    [TurnEnum.LEFT]: DirectionEnum.EAST,
+    [TurnEnum.RIGHT]: DirectionEnum.WEST,
+  },
+  [DirectionEnum.EAST]: {
+    [TurnEnum.LEFT]: DirectionEnum.NORTH,
+    [TurnEnum.RIGHT]: DirectionEnum.SOUTH,
+  },
+  [DirectionEnum.WEST]: {
+    [TurnEnum.LEFT]: DirectionEnum.SOUTH,
+    [TurnEnum.RIGHT]: DirectionEnum.NORTH,
+  },
+
+}
 
 function isLocationValid(location: Coordinates, matrixSize: MatrixSize): boolean {
   // x = 0, y = 1
@@ -35,13 +55,12 @@ export function place(state: State, coordinates: Coordinates, facing: DirectionE
   };
 };
 
-export function move(state: State, currentLocation: Coordinates, currentFacing: DirectionEnum, direction?: Nullable<DirectionEnum>): CommandResult {
+export function move(state: State, currentLocation: Coordinates, currentFacing: DirectionEnum,): CommandResult {
   if (!state.location) {
     throw new RobotNotPlacedError();
   }
 
-  const facing = direction || currentFacing;
-  const newLocation = moveInDirection[facing](currentLocation);
+  const newLocation = moveInDirection[currentFacing](currentLocation);
 
   if (!isLocationValid(newLocation, state.matrixSize)) {
     throw new InvalidLocationError("You cannot go that way.");
@@ -49,7 +68,10 @@ export function move(state: State, currentLocation: Coordinates, currentFacing: 
 
   return {
     location: newLocation,
-    facing,
+    facing: currentFacing, // TODO: can remove this here;
   };
 };
 
+export function turn(state: State, turn: TurnEnum): DirectionEnum {
+  return turnDirection[state.facing!][turn];
+}

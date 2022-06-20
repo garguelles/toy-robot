@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.move = exports.place = void 0;
+exports.turn = exports.move = exports.place = void 0;
 const types_1 = require("./types");
 const exceptions_1 = require("./exceptions");
 const moveInDirection = {
@@ -16,6 +16,24 @@ const moveInDirection = {
     [types_1.DirectionEnum.WEST]: (coordinates) => ({
         x: coordinates.x - 1, y: coordinates.y,
     }),
+};
+const turnDirection = {
+    [types_1.DirectionEnum.NORTH]: {
+        [types_1.TurnEnum.LEFT]: types_1.DirectionEnum.WEST,
+        [types_1.TurnEnum.RIGHT]: types_1.DirectionEnum.EAST,
+    },
+    [types_1.DirectionEnum.SOUTH]: {
+        [types_1.TurnEnum.LEFT]: types_1.DirectionEnum.EAST,
+        [types_1.TurnEnum.RIGHT]: types_1.DirectionEnum.WEST,
+    },
+    [types_1.DirectionEnum.EAST]: {
+        [types_1.TurnEnum.LEFT]: types_1.DirectionEnum.NORTH,
+        [types_1.TurnEnum.RIGHT]: types_1.DirectionEnum.SOUTH,
+    },
+    [types_1.DirectionEnum.WEST]: {
+        [types_1.TurnEnum.LEFT]: types_1.DirectionEnum.SOUTH,
+        [types_1.TurnEnum.RIGHT]: types_1.DirectionEnum.NORTH,
+    },
 };
 function isLocationValid(location, matrixSize) {
     // x = 0, y = 1
@@ -34,20 +52,22 @@ function place(state, coordinates, facing) {
 }
 exports.place = place;
 ;
-function move(state, currentLocation, currentFacing, direction) {
+function move(state, currentLocation, currentFacing) {
     if (!state.location) {
         throw new exceptions_1.RobotNotPlacedError();
     }
-    const facing = direction || currentFacing;
-    const newLocation = moveInDirection[facing](currentLocation);
-    console.log("NEW LOCATION", newLocation, facing);
+    const newLocation = moveInDirection[currentFacing](currentLocation);
     if (!isLocationValid(newLocation, state.matrixSize)) {
-        throw new Error("Invalid coordinates");
+        throw new exceptions_1.InvalidLocationError("You cannot go that way.");
     }
     return {
         location: newLocation,
-        facing,
+        facing: currentFacing, // TODO: can remove this here;
     };
 }
 exports.move = move;
 ;
+function turn(state, turn) {
+    return turnDirection[state.facing][turn];
+}
+exports.turn = turn;

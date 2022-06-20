@@ -5,9 +5,16 @@ export enum DirectionEnum {
   WEST = "WEST",
 };
 
+export enum TurnEnum {
+  LEFT = "LEFT",
+  RIGHT = "RIGHT",
+}
+
 export enum CommandEnum {
   PLACE = "PLACE",
   MOVE = "MOVE",
+  LEFT = "LEFT",
+  RIGHT = "RIGHT",
   REPORT = "REPORT"
 };
 
@@ -31,7 +38,7 @@ export interface CommandResult {
 export interface CommandPayload {
   location: Coordinates;
   facing: DirectionEnum;
-  direction?: DirectionEnum;
+  turnDirection?: DirectionEnum;
 };
 
 export interface Command {
