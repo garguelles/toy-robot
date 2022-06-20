@@ -1,5 +1,6 @@
 import { program, command } from "bandersnatch";
 import { place, move } from "./src/commands";
+import { RobotNotPlacedError } from "./src/exceptions";
 import { createMatrix } from "./src/matrix";
 import { State, Command, CommandEnum, DirectionEnum } from "./src/types";
 
@@ -15,26 +16,17 @@ const matrix = createMatrix(state.matrixSize);
 const executeCommand = (command: Command) => {
   switch (command.action) {
     case CommandEnum.PLACE:
-      const placeResult = place(command.payload?.location, command?.payload?.facing);
+      const placeResult = place(state, command.payload?.location, command?.payload?.facing);
       state = { ...state, ...placeResult };
       break;
     case CommandEnum.MOVE:
       const moveResult = move(
-        command.payload?.location,
-        command.payload.facing
-      );
-      state = { ...state, ...moveResult };
-      break;
-    case DirectionEnum.NORTH:
-    case DirectionEnum.SOUTH:
-    case DirectionEnum.EAST:
-    case DirectionEnum.WEST:
-      const directionResult = move(
+        state,
         command.payload.location,
         command.payload.facing,
         command.payload.direction,
       );
-      state = { ...state, ...directionResult };
+      state = { ...state, ...moveResult };
       break;
     default:
       throw new Error("Invalid command");
@@ -44,20 +36,61 @@ const executeCommand = (command: Command) => {
 
 const toyRobot = program()
   .add(
-    command("PLACE")
+    command(CommandEnum.PLACE)
       .option("x", { default: 0 })
       .option("y", { default: 0 })
-      .option("f", { default: DirectionEnum.NORTH })
+      .option("f", {
+        default: DirectionEnum.NORTH,
+        choices: [DirectionEnum.NORTH, DirectionEnum.SOUTH, DirectionEnum.EAST, DirectionEnum.WEST],
+      })
       .action(async (args) => {
-        console.log("PLACE ARGS -- ", args)
+        executeCommand({
+          action: CommandEnum.PLACE,
+          payload: {
+            location: { x: args.x, y: args.y },
+            facing: args.f as DirectionEnum,
+          }
+        });
+      }),
+  )
+  .add(
+    command(CommandEnum.MOVE)
+      .action(async (args) => {
+        if (!state.location) {
+          throw new RobotNotPlacedError();
+        }
+        console.log("MOVE  -- ", args);
       })
   )
   .add(
-    command("MOVE")
+    command(CommandEnum.REPORT)
+      .action(async () => {
+        console.log("REPORT -- ", state);
+      })
+  )
+  .add(
+    command(DirectionEnum.NORTH)
       .action(async (args) => {
-        console.log("MOVE  -- ", args)
+        console.log("MOVING NORTH -- ", args);
+      })
+  )
+  .add(
+    command(DirectionEnum.SOUTH)
+      .action(async (args) => {
+        console.log("MOVING SOUTH -- ", args);
+      })
+  )
+  .add(
+    command(DirectionEnum.EAST)
+      .action(async (args) => {
+        console.log("MOVING EAST  -- ", args);
+      })
+  ).add(
+    command(DirectionEnum.WEST)
+      .action(async (args) => {
+        console.log("MOVING WEST -- ", args);
       })
   );
 
-toyRobot.repl();
+toyRobot.repl().catch(error => console.error("[Failed]", error.message));
 

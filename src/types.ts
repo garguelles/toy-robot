@@ -8,6 +8,7 @@ export enum DirectionEnum {
 export enum CommandEnum {
   PLACE = "PLACE",
   MOVE = "MOVE",
+  REPORT = "REPORT"
 };
 
 export type Nullable<T = any> = T | null | undefined;
@@ -22,6 +23,11 @@ export interface Coordinates {
   y: number;
 };
 
+export interface CommandResult {
+  location: Coordinates;
+  facing: DirectionEnum;
+}
+
 export interface CommandPayload {
   location: Coordinates;
   facing: DirectionEnum;
@@ -29,7 +35,7 @@ export interface CommandPayload {
 };
 
 export interface Command {
-  action: CommandEnum & DirectionEnum;
+  action: CommandEnum;
   payload: CommandPayload;
 };
 

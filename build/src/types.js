@@ -13,6 +13,7 @@ var CommandEnum;
 (function (CommandEnum) {
     CommandEnum["PLACE"] = "PLACE";
     CommandEnum["MOVE"] = "MOVE";
+    CommandEnum["REPORT"] = "REPORT";
 })(CommandEnum = exports.CommandEnum || (exports.CommandEnum = {}));
 ;
 ;
