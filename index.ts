@@ -1,4 +1,4 @@
-import repl from "repl";
+import { program, command } from "bandersnatch";
 import { place, move } from "./src/commands";
 import { createMatrix } from "./src/matrix";
 import { State, Command, CommandEnum, DirectionEnum } from "./src/types";
@@ -41,11 +41,23 @@ const executeCommand = (command: Command) => {
   }
 };
 
-const r = repl.start("ToyRobot =>");
 
-// attach the state in repl's context and set to read only
-Object.defineProperty(r.context, "state", {
-  configurable: false,
-  enumerable: true,
-  value: state,
-})
+const toyRobot = program()
+  .add(
+    command("PLACE")
+      .option("x", { default: 0 })
+      .option("y", { default: 0 })
+      .option("f", { default: DirectionEnum.NORTH })
+      .action(async (args) => {
+        console.log("PLACE ARGS -- ", args)
+      })
+  )
+  .add(
+    command("MOVE")
+      .action(async (args) => {
+        console.log("MOVE  -- ", args)
+      })
+  );
+
+toyRobot.repl();
+

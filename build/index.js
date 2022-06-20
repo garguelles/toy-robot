@@ -1,9 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const repl_1 = __importDefault(require("repl"));
+const bandersnatch_1 = require("bandersnatch");
 const commands_1 = require("./src/commands");
 const matrix_1 = require("./src/matrix");
 const types_1 = require("./src/types");
@@ -35,10 +32,16 @@ const executeCommand = (command) => {
             throw new Error("Invalid command");
     }
 };
-const r = repl_1.default.start("ToyRobot =>");
-// attach the state in repl's context and set to read only
-Object.defineProperty(r.context, "state", {
-    configurable: false,
-    enumerable: true,
-    value: state,
-});
+const toyRobot = (0, bandersnatch_1.program)()
+    .add((0, bandersnatch_1.command)("PLACE")
+    .option("x", { default: 0 })
+    .option("y", { default: 0 })
+    .option("f", { default: types_1.DirectionEnum.NORTH })
+    .action(async (args) => {
+    console.log("PLACE ARGS -- ", args);
+}))
+    .add((0, bandersnatch_1.command)("MOVE")
+    .action(async (args) => {
+    console.log("MOVE  -- ", args);
+}));
+toyRobot.repl();
