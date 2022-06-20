@@ -18,12 +18,13 @@ const moveInDirection = {
     }),
 };
 function isLocationValid(location, matrixSize) {
-    return ((location.x > matrixSize.xSize || location.x < matrixSize.xSize) ||
-        (location.y > matrixSize.ySize || location.y < matrixSize.ySize));
+    // x = 0, y = 1
+    return (!(location.x > matrixSize.xSize - 1 || location.x < 0) &&
+        !(location.y > matrixSize.ySize - 1 || location.y < 0));
 }
 ;
 function place(state, coordinates, facing) {
-    if (isLocationValid(coordinates, state.matrixSize)) {
+    if (!isLocationValid(coordinates, state.matrixSize)) {
         throw new exceptions_1.InvalidLocationError();
     }
     return {
@@ -39,13 +40,14 @@ function move(state, currentLocation, currentFacing, direction) {
     }
     const facing = direction || currentFacing;
     const newLocation = moveInDirection[facing](currentLocation);
-    if (isLocationValid(newLocation, state.matrixSize)) {
-        return {
-            location: newLocation,
-            facing,
-        };
+    console.log("NEW LOCATION", newLocation, facing);
+    if (!isLocationValid(newLocation, state.matrixSize)) {
+        throw new Error("Invalid coordinates");
     }
-    throw new Error("Invalid coordinates");
+    return {
+        location: newLocation,
+        facing,
+    };
 }
 exports.move = move;
 ;

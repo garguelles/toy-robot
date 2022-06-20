@@ -17,14 +17,15 @@ const moveInDirection = {
 };
 
 function isLocationValid(location: Coordinates, matrixSize: MatrixSize): boolean {
+  // x = 0, y = 1
   return (
-    (location.x > matrixSize.xSize || location.x < matrixSize.xSize) ||
-    (location.y > matrixSize.ySize || location.y < matrixSize.ySize)
+    !(location.x > matrixSize.xSize - 1 || location.x < 0) &&
+    !(location.y > matrixSize.ySize - 1 || location.y < 0)
   );
 };
 
 export function place(state: State, coordinates: Coordinates, facing: DirectionEnum): CommandResult {
-  if (isLocationValid(coordinates, state.matrixSize)) {
+  if (!isLocationValid(coordinates, state.matrixSize)) {
     throw new InvalidLocationError();
   }
 
@@ -41,14 +42,14 @@ export function move(state: State, currentLocation: Coordinates, currentFacing: 
 
   const facing = direction || currentFacing;
   const newLocation = moveInDirection[facing](currentLocation);
-  if (isLocationValid(newLocation, state.matrixSize)) {
-    return {
-      location: newLocation,
-      facing,
-    }
+
+  if (!isLocationValid(newLocation, state.matrixSize)) {
+    throw new InvalidLocationError("You cannot go that way.");
   }
 
-  throw new Error("Invalid coordinates")
-
+  return {
+    location: newLocation,
+    facing,
+  };
 };
 

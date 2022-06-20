@@ -55,40 +55,97 @@ const toyRobot = program()
   )
   .add(
     command(CommandEnum.MOVE)
-      .action(async (args) => {
-        if (!state.location) {
+      .action(async () => {
+        if (!state.location || !state.facing) {
           throw new RobotNotPlacedError();
         }
-        console.log("MOVE  -- ", args);
+        executeCommand({
+          action: CommandEnum.MOVE,
+          payload: {
+            location: state.location,
+            facing: state.facing,
+          }
+        })
       })
   )
   .add(
     command(CommandEnum.REPORT)
       .action(async () => {
-        console.log("REPORT -- ", state);
+        if (!state.location || !state.facing) {
+          throw new RobotNotPlacedError();
+        }
+
+        const { location, facing } = state;
+        console.log(`OUTPUT: ${location.x}, ${location.y}, ${facing}`)
+        console.log(matrix);
       })
   )
   .add(
     command(DirectionEnum.NORTH)
-      .action(async (args) => {
-        console.log("MOVING NORTH -- ", args);
+      .action(async () => {
+        if (!state.location || !state.facing) {
+          throw new RobotNotPlacedError();
+        }
+
+        executeCommand({
+          action: CommandEnum.MOVE,
+          payload: {
+            location: state.location,
+            facing: state.facing,
+            direction: DirectionEnum.NORTH,
+          }
+        });
       })
   )
   .add(
     command(DirectionEnum.SOUTH)
-      .action(async (args) => {
-        console.log("MOVING SOUTH -- ", args);
+      .action(async () => {
+        if (!state.location || !state.facing) {
+          throw new RobotNotPlacedError();
+        }
+
+        executeCommand({
+          action: CommandEnum.MOVE,
+          payload: {
+            location: state.location,
+            facing: state.facing,
+            direction: DirectionEnum.SOUTH,
+          }
+        });
       })
   )
   .add(
     command(DirectionEnum.EAST)
-      .action(async (args) => {
-        console.log("MOVING EAST  -- ", args);
+      .action(async () => {
+        if (!state.location || !state.facing) {
+          throw new RobotNotPlacedError();
+        }
+
+        executeCommand({
+          action: CommandEnum.MOVE,
+          payload: {
+            location: state.location,
+            facing: state.facing,
+            direction: DirectionEnum.EAST,
+          }
+        });
       })
   ).add(
     command(DirectionEnum.WEST)
-      .action(async (args) => {
-        console.log("MOVING WEST -- ", args);
+      .action(async () => {
+        if (!state.location || !state.facing) {
+          throw new RobotNotPlacedError();
+        }
+
+        executeCommand({
+          action: CommandEnum.MOVE,
+          payload: {
+            location: state.location,
+            facing: state.facing,
+            direction: DirectionEnum.WEST,
+          }
+        });
+
       })
   );
 

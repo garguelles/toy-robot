@@ -44,29 +44,75 @@ const toyRobot = (0, bandersnatch_1.program)()
     });
 }))
     .add((0, bandersnatch_1.command)(types_1.CommandEnum.MOVE)
-    .action(async (args) => {
-    if (!state.location) {
+    .action(async () => {
+    if (!state.location || !state.facing) {
         throw new exceptions_1.RobotNotPlacedError();
     }
-    console.log("MOVE  -- ", args);
+    executeCommand({
+        action: types_1.CommandEnum.MOVE,
+        payload: {
+            location: state.location,
+            facing: state.facing,
+        }
+    });
 }))
     .add((0, bandersnatch_1.command)(types_1.CommandEnum.REPORT)
     .action(async () => {
     console.log("REPORT -- ", state);
 }))
     .add((0, bandersnatch_1.command)(types_1.DirectionEnum.NORTH)
-    .action(async (args) => {
-    console.log("MOVING NORTH -- ", args);
+    .action(async () => {
+    if (!state.location || !state.facing) {
+        throw new exceptions_1.RobotNotPlacedError();
+    }
+    executeCommand({
+        action: types_1.CommandEnum.MOVE,
+        payload: {
+            location: state.location,
+            facing: state.facing,
+            direction: types_1.DirectionEnum.NORTH,
+        }
+    });
 }))
     .add((0, bandersnatch_1.command)(types_1.DirectionEnum.SOUTH)
-    .action(async (args) => {
-    console.log("MOVING SOUTH -- ", args);
+    .action(async () => {
+    if (!state.location || !state.facing) {
+        throw new exceptions_1.RobotNotPlacedError();
+    }
+    executeCommand({
+        action: types_1.CommandEnum.MOVE,
+        payload: {
+            location: state.location,
+            facing: state.facing,
+            direction: types_1.DirectionEnum.SOUTH,
+        }
+    });
 }))
     .add((0, bandersnatch_1.command)(types_1.DirectionEnum.EAST)
-    .action(async (args) => {
-    console.log("MOVING EAST  -- ", args);
+    .action(async () => {
+    if (!state.location || !state.facing) {
+        throw new exceptions_1.RobotNotPlacedError();
+    }
+    executeCommand({
+        action: types_1.CommandEnum.MOVE,
+        payload: {
+            location: state.location,
+            facing: state.facing,
+            direction: types_1.DirectionEnum.EAST,
+        }
+    });
 })).add((0, bandersnatch_1.command)(types_1.DirectionEnum.WEST)
-    .action(async (args) => {
-    console.log("MOVING WEST -- ", args);
+    .action(async () => {
+    if (!state.location || !state.facing) {
+        throw new exceptions_1.RobotNotPlacedError();
+    }
+    executeCommand({
+        action: types_1.CommandEnum.MOVE,
+        payload: {
+            location: state.location,
+            facing: state.facing,
+            direction: types_1.DirectionEnum.WEST,
+        }
+    });
 }));
 toyRobot.repl().catch(error => console.error("[Failed]", error.message));
