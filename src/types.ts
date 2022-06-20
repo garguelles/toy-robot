@@ -10,9 +10,7 @@ export enum CommandEnum {
   MOVE = "MOVE",
 };
 
-export type CommandPayload<T> = T;
-
-export type Nullable<T = any> = T | null;
+export type Nullable<T = any> = T | null | undefined;
 
 export interface MatrixSize {
   xSize: number;
@@ -24,19 +22,19 @@ export interface Coordinates {
   y: number;
 };
 
-export interface Command<T> {
+export interface CommandPayload {
+  location: Coordinates;
+  facing: DirectionEnum;
+  direction?: DirectionEnum;
+};
+
+export interface Command {
   action: CommandEnum & DirectionEnum;
-  payload: Nullable<CommandPayload<T>>;
-}
+  payload: CommandPayload;
+};
 
 export interface State {
   matrixSize: MatrixSize,
   location: Nullable<Coordinates>;
   facing: Nullable<DirectionEnum>;
 };
-
-export interface IPlacePayload {
-  coordinates: Coordinates,
-  facing: DirectionEnum,
-}
-

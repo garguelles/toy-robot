@@ -1,9 +1,9 @@
-import { Coordinates, DirectionEnum, Nullable } from "./types";
+import { Coordinates, DirectionEnum, CommandPayload, Nullable } from "./types";
 
-export function place(coordinates: Coordinates, facing: DirectionEnum): Coordinates {
-  return { x: 0, y: 1 }
+export function place(coordinates: Coordinates, facing: DirectionEnum): CommandPayload {
+  return { location: { x: 0, y: 1 }, facing: DirectionEnum.NORTH };
 };
 
-export function move(location: Coordinates, facing: Nullable<DirectionEnum>): Coordinates {
-  return { x: 0, y: 0 };
+export function move(currentLocation: Coordinates, currentFacing: DirectionEnum, direction?: Nullable<DirectionEnum>): CommandPayload {
+  return { location: { x: 0, y: 0 }, facing: DirectionEnum.SOUTH };
 };

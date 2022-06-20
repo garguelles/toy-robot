@@ -1,13 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DirectionEnum = void 0;
+exports.CommandEnum = exports.DirectionEnum = void 0;
 var DirectionEnum;
 (function (DirectionEnum) {
-    DirectionEnum[DirectionEnum["NORTH"] = 0] = "NORTH";
-    DirectionEnum[DirectionEnum["SOUTH"] = 1] = "SOUTH";
-    DirectionEnum[DirectionEnum["EAST"] = 2] = "EAST";
-    DirectionEnum[DirectionEnum["WEST"] = 3] = "WEST";
+    DirectionEnum["NORTH"] = "NORTH";
+    DirectionEnum["SOUTH"] = "SOUTH";
+    DirectionEnum["EAST"] = "EAST";
+    DirectionEnum["WEST"] = "WEST";
 })(DirectionEnum = exports.DirectionEnum || (exports.DirectionEnum = {}));
+;
+var CommandEnum;
+(function (CommandEnum) {
+    CommandEnum["PLACE"] = "PLACE";
+    CommandEnum["MOVE"] = "MOVE";
+})(CommandEnum = exports.CommandEnum || (exports.CommandEnum = {}));
+;
+;
+;
 ;
 ;
 ;
