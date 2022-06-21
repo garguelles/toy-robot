@@ -37,7 +37,6 @@ const turnDirection = {
 }
 
 function isLocationValid(location: Coordinates, matrixSize: MatrixSize): boolean {
-  // x = 0, y = 1
   return (
     !(location.x > matrixSize.xSize - 1 || location.x < 0) &&
     !(location.y > matrixSize.ySize - 1 || location.y < 0)
