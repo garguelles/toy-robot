@@ -1,5 +1,5 @@
-const {place, move} = require("../src/commands");
-const {DirectionEnum} = require("../src/types");
+const {place, move, turn} = require("../src/commands");
+const {DirectionEnum, TurnEnum} = require("../src/types");
 const {InvalidLocationError} = require("../src/exceptions");
 
 const MATRIX_SIZE = { xSize: 5, ySize: 5 };
@@ -59,5 +59,15 @@ test("ensure robot does not fall of the edge", () => {
   };
 
   expect(() => move(state, state.location, state.facing)).toThrow(InvalidLocationError);
+});
+
+test("can turn robot", () => {
+  const state = {
+    location: { x: 2, y: 1},
+    facing: DirectionEnum.EAST,
+    matrixSize: MATRIX_SIZE,
+  };
+
+  expect(turn(state, TurnEnum.LEFT)).toBe(DirectionEnum.NORTH);
 });
 
