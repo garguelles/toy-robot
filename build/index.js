@@ -68,10 +68,6 @@ const toyRobot = (0, bandersnatch_1.program)()
     }
     executeCommand({
         action: types_1.CommandEnum.LEFT,
-        payload: {
-            location: state.location,
-            facing: state.facing,
-        }
     });
 }))
     .add((0, bandersnatch_1.command)(types_1.CommandEnum.RIGHT)
@@ -81,10 +77,6 @@ const toyRobot = (0, bandersnatch_1.program)()
     }
     executeCommand({
         action: types_1.CommandEnum.RIGHT,
-        payload: {
-            location: state.location,
-            facing: state.facing,
-        }
     });
 }))
     .add((0, bandersnatch_1.command)(types_1.CommandEnum.REPORT)

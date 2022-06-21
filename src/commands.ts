@@ -1,4 +1,4 @@
-import { Coordinates, DirectionEnum, Nullable, State, MatrixSize, CommandResult, TurnEnum } from "./types";
+import { Coordinates, DirectionEnum, State, MatrixSize, CommandResult, TurnEnum } from "./types";
 import { InvalidLocationError, RobotNotPlacedError } from "./exceptions";
 
 const moveInDirection = {
