@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
-    "test": "jest"
+    "test": "jest",
+    "start": "npm run build && node build/index.js"
   },
   "author": "garguelles",
   "license": "ISC",
