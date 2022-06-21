@@ -69,5 +69,6 @@ test("can turn robot", () => {
   };
 
   expect(turn(state, TurnEnum.LEFT)).toBe(DirectionEnum.NORTH);
+  expect(turn(state, TurnEnum.RIGHT)).toBe(DirectionEnum.SOUTH);
 });
 
