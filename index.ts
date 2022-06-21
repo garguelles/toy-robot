@@ -37,7 +37,6 @@ const executeCommand = (command: Command) => {
   }
 };
 
-
 const toyRobot = program()
   .add(
     command(CommandEnum.PLACE)
