@@ -1,4 +1,4 @@
-const {place} = require("../src/commands");
+const {place, move} = require("../src/commands");
 const {DirectionEnum} = require("../src/types");
 const {InvalidLocationError} = require("../src/exceptions");
 
@@ -32,4 +32,19 @@ test("cannot place the robot outside the table", () => {
   };
 
   expect(() => place(state, coordinates, facing)).toThrow(InvalidLocationError);
+});
+
+test("can move a robot", () => {
+  const state = {
+    location: { x: 0, y: 0},
+    facing: DirectionEnum.NORTH,
+    matrixSize: { xSize: 5, ySize: 5 },
+  };
+
+  const expected = {
+    location: { x: 0, y: 1 },
+    facing: DirectionEnum.NORTH,
+  };
+
+  expect(move(state, state.location, state.facing)).toEqual(expected);
 });
