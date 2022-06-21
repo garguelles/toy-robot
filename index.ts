@@ -15,14 +15,14 @@ let state = initialState;
 const executeCommand = (command: Command) => {
   switch (command.action) {
     case CommandEnum.PLACE:
-      const placeResult = place(state, command.payload?.location, command?.payload?.facing);
+      const placeResult = place(state, command.payload?.location!, command?.payload?.facing!);
       state = { ...state, ...placeResult };
       break;
     case CommandEnum.MOVE:
       const moveResult = move(
         state,
-        command.payload.location,
-        command.payload.facing,
+        command.payload!.location!,
+        command.payload!.facing!,
       );
       state = { ...state, ...moveResult };
       break;
@@ -69,7 +69,7 @@ const toyRobot = program()
             location: state.location,
             facing: state.facing,
           }
-        })
+        });
       })
   )
   .add(
@@ -80,11 +80,7 @@ const toyRobot = program()
         }
         executeCommand({
           action: CommandEnum.LEFT,
-          payload: {
-            location: state.location,
-            facing: state.facing,
-          }
-        })
+        });
       })
   )
   .add(
@@ -95,10 +91,6 @@ const toyRobot = program()
         }
         executeCommand({
           action: CommandEnum.RIGHT,
-          payload: {
-            location: state.location,
-            facing: state.facing,
-          }
         })
       })
 
@@ -113,6 +105,7 @@ const toyRobot = program()
         const { location, facing } = state;
         const matrix = createMatrix(state.matrixSize);
         matrix[(state.matrixSize.ySize - 1) - location.y][location.x] = "o";
+
         console.log(`OUTPUT: ${location.x}, ${location.y}, ${facing}`)
         console.log(matrix);
       })

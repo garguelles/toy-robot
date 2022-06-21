@@ -43,7 +43,7 @@ export interface CommandPayload {
 
 export interface Command {
   action: CommandEnum;
-  payload: CommandPayload;
+  payload?: CommandPayload;
 };
 
 export interface State {
